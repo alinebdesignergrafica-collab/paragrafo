@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#ff5a7a">
+  <meta name="color-scheme" content="dark">
+  <title>Chamego Light</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main id="app" aria-label="Chamego Light">
+    <div id="light" aria-hidden="true"></div>
+    <section id="controls" class="panel" aria-label="Controles da luz">
+      <div class="topbar">
+        <div>
+          <p class="eyebrow">LUZ DE AMBIENTE</p>
+          <h1>Chamego Light <span>🥵</span></h1>
+        </div>
+        <button id="install" class="ghost" type="button" hidden>Instalar</button>
+      </div>
+      <div class="wheel-wrap">
+        <div id="wheel" class="wheel" role="slider" tabindex="0" aria-label="Cor" aria-valuemin="0" aria-valuemax="359" aria-valuenow="345">
+          <div id="wheelDot" class="wheel-dot" aria-hidden="true"></div>
+          <div class="wheel-center">
+            <div id="swatch" class="swatch"></div>
+            <strong id="hexValue">#FF526F</strong>
+            <span id="hueValue">345°</span>
+          </div>
+        </div>
+      </div>
+      <div class="slider-card">
+        <label for="saturation"><span>Saturação</span><output id="saturationValue" for="saturation">82%</output></label>
+        <input id="saturation" type="range" min="0" max="100" value="82" step="1">
+        <label for="brightness"><span>Brilho da cor</span><output id="brightnessValue" for="brightness">100%</output></label>
+        <input id="brightness" type="range" min="5" max="100" value="100" step="1">
+        <p class="note">O brilho físico da tela continua sendo controlado pelo Android.</p>
+      </div>
+      <div class="presets" aria-label="Cores rápidas">
+        <button type="button" data-h="18" data-s="92" data-v="100" style="--preset:#ff6e3d">Quente</button>
+        <button type="button" data-h="345" data-s="82" data-v="100" style="--preset:#ff526f">Rosa</button>
+        <button type="button" data-h="0" data-s="92" data-v="100" style="--preset:#ff1414">Vermelho</button>
+        <button type="button" data-h="285" data-s="74" data-v="100" style="--preset:#d441ff">Roxo</button>
+      </div>
+      <button id="start" class="primary" type="button">Acender tela inteira</button>
+      <p id="status" class="status" aria-live="polite">Offline pronto depois da primeira abertura.</p>
+    </section>
+    <button id="reveal" class="reveal" type="button" aria-label="Mostrar controles" hidden>⋯</button>
+  </main>
+  <script src="./app.js" defer></script>
+</body>
+</html>
