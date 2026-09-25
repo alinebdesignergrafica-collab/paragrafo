@@ -1,6 +1,7 @@
 (() => {
   const root = document.documentElement;
   const controls = document.querySelector('#controls');
+  const light = document.querySelector('#light');
   const wheel = document.querySelector('#wheel');
   const dot = document.querySelector('#wheelDot');
   const swatch = document.querySelector('#swatch');
@@ -63,10 +64,33 @@
   async function enterLightMode() {
     await requestWakeLock();
     try { if (!document.fullscreenElement && document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen({ navigationUI: 'hide' }); } catch {}
-    controls.classList.add('hidden'); reveal.hidden = false;
+    controls.classList.add('hidden'); reveal.hidden = true;
   }
-  function showControls() { controls.classList.remove('hidden'); reveal.hidden = true; }
-  start.addEventListener('click', enterLightMode); reveal.addEventListener('click', showControls);
+  async function showControls() {
+    controls.classList.remove('hidden');
+    reveal.hidden = true;
+    if (wakeLock) {
+      try { await wakeLock.release(); } catch {}
+      wakeLock = null;
+    }
+    try { if (document.fullscreenElement && document.exitFullscreen) await document.exitFullscreen(); } catch {}
+  }
+
+  let lastTap = { time: 0, x: 0, y: 0 };
+  light.addEventListener('pointerup', ev => {
+    if (!controls.classList.contains('hidden')) return;
+    const now = performance.now();
+    const elapsed = now - lastTap.time;
+    const distance = Math.hypot(ev.clientX - lastTap.x, ev.clientY - lastTap.y);
+    if (elapsed > 0 && elapsed <= 360 && distance <= 56) {
+      lastTap = { time: 0, x: 0, y: 0 };
+      showControls();
+      return;
+    }
+    lastTap = { time: now, x: ev.clientX, y: ev.clientY };
+  });
+
+  start.addEventListener('click', enterLightMode);
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && controls.classList.contains('hidden')) requestWakeLock(); });
   window.addEventListener('beforeinstallprompt', ev => { ev.preventDefault(); installPrompt = ev; install.hidden = false; });
   install.addEventListener('click', async () => { if (!installPrompt) return; installPrompt.prompt(); await installPrompt.userChoice; installPrompt = null; install.hidden = true; });
